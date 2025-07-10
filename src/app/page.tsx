@@ -18,9 +18,30 @@ function Canvas(props: CanvasProps) {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        let mouseX = 0;
+        let mouseY = 0;
+
         const resizeCanvas = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+        };
+
+        const mouseMove = (event: MouseEvent) => {
+            mouseX = event.offsetX;
+            mouseY = event.offsetY;
+        };
+
+        const mouseClick = () => {
+            const chunkX = Math.floor(mouseX / renderScale / CHUNK_SIZE);
+            const chunkY = Math.floor(mouseY / renderScale / CHUNK_SIZE);
+
+            const chunk = props.chunks.find(
+                chunk => chunk.x === chunkX && chunk.y === chunkY,
+            );
+
+            if (!chunk) return;
+
+            console.log('Clicked chunk', chunk);
         };
 
         const draw = () => {
@@ -47,10 +68,21 @@ function Canvas(props: CanvasProps) {
                     CHUNK_SIZE * renderScale,
                 );
             }
+
+            // Draw selecting box
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.fillRect(
+                Math.floor(mouseX / renderScale) * renderScale,
+                Math.floor(mouseY / renderScale) * renderScale,
+                renderScale,
+                renderScale,
+            );
         };
 
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', mouseMove);
+        window.addEventListener('mousedown', mouseClick);
         draw();
 
         // Redraw canvas with target to 20 FPS
@@ -58,6 +90,8 @@ function Canvas(props: CanvasProps) {
 
         return () => {
             window.removeEventListener('resize', resizeCanvas);
+            window.removeEventListener('mousemove', mouseMove);
+            window.removeEventListener('mousedown', mouseClick);
         };
     }, []);
 

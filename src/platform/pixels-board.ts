@@ -1,6 +1,6 @@
 import {Chunk, createChunk} from './chunk';
 
-class PixelsBoard {
+export class PixelsBoard {
     private chunks: Map<string, Chunk> = new Map();
 
     private _getChunkKey(x: number, y: number): string {

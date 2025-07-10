@@ -1,5 +1,5 @@
 import {singleton} from 'tsyringe';
-import {Chunk, createChunk} from './chunk';
+import {Chunk, CHUNK_SIZE, createChunk} from './chunk';
 
 @singleton()
 export class PixelsBoard {
@@ -7,6 +7,7 @@ export class PixelsBoard {
 
     constructor() {
         this.createChunk(0, 0);
+        console.log('Created default chunk at 0 0');
     }
 
     private _getChunkKey(x: number, y: number): string {
@@ -28,5 +29,22 @@ export class PixelsBoard {
         const chunk = createChunk(x, y);
         this.chunks.set(key, chunk);
         return chunk;
+    }
+
+    updatePixel(x: number, y: number, color: string) {
+        const chunkX = Math.round(x / CHUNK_SIZE);
+        const chunkY = Math.round(y / CHUNK_SIZE);
+        const chunk = this.getChunk(chunkX, chunkY);
+        if (!chunk) {
+            throw new Error(`Chunk not found at (${chunkX}, ${chunkY})`);
+        }
+        const pixel = chunk!.pixels.find(
+            pixel => pixel.x === x % CHUNK_SIZE && pixel.y === y % CHUNK_SIZE,
+        );
+        if (pixel) {
+            pixel.color = color;
+        } else {
+            throw new Error('Pixel not found');
+        }
     }
 }

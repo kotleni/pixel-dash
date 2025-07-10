@@ -5,6 +5,10 @@ import {Chunk, createChunk} from './chunk';
 export class PixelsBoard {
     private chunks: Map<string, Chunk> = new Map();
 
+    constructor() {
+        this.createChunk(0, 0);
+    }
+
     private _getChunkKey(x: number, y: number): string {
         return `${x},${y}`;
     }

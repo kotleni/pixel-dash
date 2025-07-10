@@ -1,6 +1,5 @@
 'use client';
 import {Chunk, CHUNK_SIZE} from '@/platform/chunk';
-import {Pixel} from '@/platform/pixel';
 import React, {useRef, useEffect, useState} from 'react';
 
 interface CanvasProps {

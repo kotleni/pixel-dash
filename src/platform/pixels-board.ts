@@ -32,8 +32,8 @@ export class PixelsBoard {
     }
 
     updatePixel(x: number, y: number, color: string) {
-        const chunkX = Math.round(x / CHUNK_SIZE);
-        const chunkY = Math.round(y / CHUNK_SIZE);
+        const chunkX = Math.floor(x / CHUNK_SIZE);
+        const chunkY = Math.floor(y / CHUNK_SIZE);
         const chunk = this.getChunk(chunkX, chunkY);
         if (!chunk) {
             throw new Error(`Chunk not found at (${chunkX}, ${chunkY})`);

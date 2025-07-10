@@ -11,8 +11,7 @@ export interface Chunk {
 export function createChunk(x: number, y: number): Chunk {
     const pixels: Pixel[] = [];
     for (let i = 0; i < CHUNK_SIZE; i++) {
-        for (let j = 0; j < CHUNK_SIZE; j++)
-            pixels.push(createPixel(x * i, y * j));
+        for (let j = 0; j < CHUNK_SIZE; j++) pixels.push(createPixel(i, j));
     }
     return {pixels, x, y};
 }

@@ -1,5 +1,7 @@
+import {singleton} from 'tsyringe';
 import {Chunk, createChunk} from './chunk';
 
+@singleton()
 export class PixelsBoard {
     private chunks: Map<string, Chunk> = new Map();
 

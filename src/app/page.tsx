@@ -18,6 +18,9 @@ function Canvas(props: CanvasProps) {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        const lockImage = new Image();
+        lockImage.src = '/icons/lock-icon.svg';
+
         let mouseX = 0;
         let mouseY = 0;
 
@@ -59,24 +62,60 @@ function Canvas(props: CanvasProps) {
                     );
                 }
 
-                // Draw chunk border
-                ctx.strokeStyle = 'red';
-                ctx.strokeRect(
-                    chunk.x * CHUNK_SIZE * renderScale,
-                    chunk.y * CHUNK_SIZE * renderScale,
-                    CHUNK_SIZE * renderScale,
-                    CHUNK_SIZE * renderScale,
-                );
-            }
+                // If mouse in bound of chunk
+                if (
+                    mouseX >= chunk.x * CHUNK_SIZE * renderScale &&
+                    mouseX <= (chunk.x + 1) * CHUNK_SIZE * renderScale &&
+                    mouseY >= chunk.y * CHUNK_SIZE * renderScale &&
+                    mouseY <= (chunk.y + 1) * CHUNK_SIZE * renderScale
+                ) {
+                    // TODO:
+                    const isLocked = false;
 
-            // Draw selecting box
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.fillRect(
-                Math.floor(mouseX / renderScale) * renderScale,
-                Math.floor(mouseY / renderScale) * renderScale,
-                renderScale,
-                renderScale,
-            );
+                    if (isLocked) {
+                        // Draw background
+                        ctx.fillStyle = 'rgba(11, 11, 11, 0.5)';
+                        ctx.fillRect(
+                            chunk.x * CHUNK_SIZE * renderScale,
+                            chunk.y * CHUNK_SIZE * renderScale,
+                            CHUNK_SIZE * renderScale,
+                            CHUNK_SIZE * renderScale,
+                        );
+
+                        // Draw lock icon
+                        const lockSize = 2 * renderScale;
+                        ctx.drawImage(
+                            lockImage,
+                            chunk.x * CHUNK_SIZE +
+                                (CHUNK_SIZE / 2) * renderScale -
+                                lockSize / 2,
+                            chunk.y * CHUNK_SIZE +
+                                (CHUNK_SIZE / 2) * renderScale -
+                                lockSize / 2,
+                            lockSize,
+                            lockSize,
+                        );
+                    } else {
+                        // Draw selecting box
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                        ctx.fillRect(
+                            Math.floor(mouseX / renderScale) * renderScale,
+                            Math.floor(mouseY / renderScale) * renderScale,
+                            renderScale,
+                            renderScale,
+                        );
+                    }
+
+                    // Draw chunk border
+                    ctx.strokeStyle = isLocked ? 'red' : 'white';
+                    ctx.strokeRect(
+                        chunk.x * CHUNK_SIZE * renderScale,
+                        chunk.y * CHUNK_SIZE * renderScale,
+                        CHUNK_SIZE * renderScale,
+                        CHUNK_SIZE * renderScale,
+                    );
+                }
+            }
         };
 
         resizeCanvas();

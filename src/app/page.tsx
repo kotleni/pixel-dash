@@ -16,13 +16,27 @@ export default function Home() {
         console.log(chunks);
     };
 
+    const drawPixel = async (x: number, y: number) => {
+        await fetch('/api/pixel', {
+            method: 'POST',
+            body: JSON.stringify({x, y, color: 'green'}),
+        });
+
+        await updateBoard();
+    };
+
     useEffect(() => {
         void updateBoard();
     }, []);
 
     return (
         <>
-            <Canvas chunks={chunks} />
+            <Canvas
+                chunks={chunks}
+                onPixelSelected={px => {
+                    void drawPixel(px.x, px.y);
+                }}
+            />
         </>
     );
 }

@@ -1,8 +1,10 @@
 import {Chunk, CHUNK_SIZE} from '@/platform/chunk';
+import {Pixel} from '@/platform/pixel';
 import {useRef, useEffect} from 'react';
 
 interface CanvasProps {
     chunks: Chunk[];
+    onPixelSelected: (pixel: Pixel) => void;
 }
 
 export function Canvas(props: CanvasProps) {
@@ -42,7 +44,16 @@ export function Canvas(props: CanvasProps) {
 
             if (!chunk) return;
 
-            console.log('Clicked chunk', chunk);
+            const pixelX = Math.floor(mouseX / renderScale);
+            const pixelY = Math.floor(mouseY / renderScale);
+
+            const pixel = chunk.pixels.find(
+                pixel => pixel.x === pixelX && pixel.y === pixelY,
+            );
+
+            if (!pixel) return;
+
+            props.onPixelSelected(pixel);
         };
 
         const draw = () => {
